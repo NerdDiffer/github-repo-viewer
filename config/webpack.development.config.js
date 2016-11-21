@@ -7,6 +7,8 @@ module.exports = {
   entry: [
     'webpack/hot/dev-server', // hot reloading url
     'webpack-dev-server/client?http://localhost:8080', // inline loading url
+    `${PATHS.STYLES_DIST}/semantic.js`,
+    `${PATHS.STYLES_DIST}/semantic.css`,
     `${PATHS.SRC}/index.jsx`,
   ],
   output: {
