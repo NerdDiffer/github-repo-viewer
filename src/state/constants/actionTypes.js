@@ -1,3 +1,4 @@
-export const FOO = 'FOO';
-export const BAR = 'BAR';
-export const QUX = 'QUX';
+export const REPOS_REPLACE_ALL = 'REPOS_REPLACE_ALL';
+export const REPOS_ERROR = 'REPOS_ERROR';
+export const OWNER_OF_REPO = 'OWNER_OF_REPO';
+export const CURRENT_USER = 'CURRENT_USER';
