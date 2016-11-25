@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 
 import App from './components/App';
-import store from './data/store';
+import store from './state/store';
 
 // Route config
 const routes = (
