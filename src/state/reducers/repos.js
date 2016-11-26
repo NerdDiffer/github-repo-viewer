@@ -1,6 +1,7 @@
 import {
   REPOS_REPLACE_ALL,
   REPOS_ERROR,
+  REPOS_SORT
 } from '../constants/actionTypes';
 
 const getFallbackState = () => ({ repos: [], nextPageUrl: null });
@@ -16,6 +17,14 @@ const reposForUser = (prevState = getFallbackState(), action) => {
         nextPageUrl
       }
     }
+    case REPOS_SORT: {
+      const { repos } = action;
+
+      return {
+        ...prevState,
+        repos: [...repos]
+      }
+    }
     default:
       return prevState;
   }
@@ -23,6 +32,7 @@ const reposForUser = (prevState = getFallbackState(), action) => {
 
 const ReposReducer = (prevState = {}, action) => {
   switch(action.type) {
+    case REPOS_SORT:
     case REPOS_REPLACE_ALL: {
       const { login } = action;
 
