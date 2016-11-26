@@ -23,6 +23,14 @@ class Repos extends Component {
     } else {
       return (
         <Table celled structured>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell content="name" />
+              <Table.HeaderCell content="description" />
+              <Table.HeaderCell content="watchers" />
+              <Table.HeaderCell content="language" />
+            </Table.Row>
+          </Table.Header>
           <Table.Body>
             {reposForSelectedUser.map((data, ind) => (<Repo key={ind} data={data} />))}
           </Table.Body>
@@ -39,7 +47,6 @@ class Repos extends Component {
         <h2>Repos</h2>
         <ReposControls />
         <br />
-        <Owner data={selectedUser} />
         {this.renderChildren()}
       </div>
     );
