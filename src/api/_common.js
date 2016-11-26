@@ -1,3 +1,5 @@
+export const BASE_URL = 'https://api.github.com';
+
 const logErrToConsole = response => {
   const keys = Object.keys(response);
   console.log('keys on response object:\n', keys);
@@ -12,18 +14,25 @@ const logErrToConsole = response => {
   console.log('body:\n', body);
 };
 
-export const preProcessResponse = (response, { debug = false } = {}) => {
-  if (response.status >= 400) {
-    if (debug) { logErrToConsole(response); }
+const extractNextPageUrl = response => {
+  const link = response.headers.get('link');
+  if (!link) { return null; }
 
-    const { status, statusText, url  } = response;
-    const err = { status, statusText, url, message: 'Bad request' };
-    const json = JSON.stringify(err);
+  const nextLink = link.split(',').find(s => s.indexOf('rel="next"') > -1)
+  if (!nextLink) { return null; }
 
-    throw new Error(json);
-  } else {
-    return response.json();
-  }
-};
+  return nextLink.split(';')[0].slice(1, -1)
+}
 
-export const BASE_URL = 'https://api.github.com';
+export const preProcessResponse = (response, { debug = false } = {}) => (
+  response.json()
+    .then(json => {
+      if (response.status >= 400) {
+        if (debug) { logErrToConsole(response); }
+        throw new Error(json);
+      } else {
+        const nextPageUrl = extractNextPageUrl(response);
+        return Object.assign({}, { repos: json }, { nextPageUrl });
+      }
+    })
+);
