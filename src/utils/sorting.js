@@ -1,14 +1,56 @@
 import deepClone from 'lodash.clonedeep';
 
+const comparatorFns = {
+  asc:  (a, b) => a > b,
+  desc: (a, b) => a < b,
+  compareRows: (compareFn, key, rowA, rowB) => {
+    const valA = rowA[key];
+    const valB = rowB[key];
+    return compareFn(valA, valB);
+  }
+};
+
+/**
+ * Sort objects in-place, according to a common criteria on each object.
+ * @param rows {Array}, collection of objects.
+ * @param key {String}, name of property on the object, the criteria to sort by.
+ * @param direction {String}, the direction to sort by ('asc' or 'desc').
+ */
+const sortObjsBy = (rows, key, direction = 'asc') => {
+  if (typeof key !== 'string') {
+    throw new Error('Must pass in a "key" (as a string) to compare objects.');
+  }
+  if (['asc', 'desc'].indexOf(direction) < 0) {
+    throw new Error('Must sort in one of these two directions: "asc" or "desc"');
+  }
+
+  const directionalCompare = comparatorFns[direction];
+  const { compareRows } = comparatorFns;
+  const directionallyCompareObjs = compareRows.bind(null, directionalCompare, key);
+
+  return directionallyCompareObjs;
+};
+
 /**
  * - does *not* mutate original array
  * - handles object sorting
  * - sort by multiple criteria:
- *   - 'watchers', in descending order
- *   - 'name' in ascending order
+ *   - 'watchers', in desc order
+ *   - 'name' in asc/desc order || 'updated_at' in asc/desc order
  */
-const sort = (arr) => {
+const sort = (arr, multipleSortOpts) => {
   const copy = deepClone(arr);
+
+  let secondarySort;
+
+  if (!multipleSortOpts) {
+    // then sort equal elements (according to num of watchers) by falling back
+    // to a default sort
+    secondarySort = sortObjsBy(copy, 'name', 'asc')
+  } else {
+    const { key, dir } = multipleSortOpts;
+    secondarySort = sortObjsBy(copy, key, dir);
+  }
 
   return copy.sort((a, b) => {
     // compare by watchers, descending order
@@ -20,19 +62,7 @@ const sort = (arr) => {
     } else if (watchersA > watchersB) {
       return -1; // put `a` first
     } else {
-      // compare by name, ascending order
-      const nameA = a.name;
-      const nameB = b.name;
-
-      if (nameA < nameB) {
-        return -1; // put `a` first
-      } else if (nameA > nameB) {
-        return 1; // put `b` first
-      } else {
-        // probably won't happen b/c we're comparing repos by an individual user
-        // and github forces user repo names to be unique.
-        return 0;
-      }
+      return secondarySort(a, b);
     }
   });
 };
