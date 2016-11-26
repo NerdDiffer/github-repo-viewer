@@ -5,6 +5,7 @@ import { reduxForm, Field as ReduxFormField } from 'redux-form';
 import { Table } from 'semantic-ui-react';
 import * as actions from '../../state/actions/repos';
 import Repo from './Repo'
+import Owner from './Owner'
 import ReposControls from './Controls';
 
 class Repos extends Component {
@@ -31,14 +32,14 @@ class Repos extends Component {
   }
 
   render() {
-    const { nameOfSelectedUser } = this.props;
+    const { selectedUser } = this.props;
 
     return (
       <div className="repos list">
         <h2>Repos</h2>
         <ReposControls />
         <br />
-        {nameOfSelectedUser ? <h3>{nameOfSelectedUser}</h3> : null}
+        <Owner data={selectedUser} />
         {this.renderChildren()}
       </div>
     );
