@@ -17,7 +17,7 @@ export const preProcessResponse = response => (
         throw new Error(json);
       } else {
         const nextPageUrl = extractNextPageUrl(response);
-        return Object.assign({}, { repos: json }, { nextPageUrl });
+        return { json, nextPageUrl };
       }
     })
 );

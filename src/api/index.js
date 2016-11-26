@@ -10,5 +10,6 @@ export const fetchUserRepos = username => {
   };
 
   return fetch(url, config)
-    .then(response => preProcessResponse(response));
+    .then(response => preProcessResponse(response))
+    .then(({ json, nextPageUrl }) => ({ repos: json, nextPageUrl }));
 };
