@@ -22,21 +22,26 @@ export const getRepos = login => {
   return (dispatch, getState) => (
     fetchUserRepos(login)
       .then(res => {
+        console.log(res);
+        const { repos, nextPageUrl } = res;
+
         dispatch({ type: CURRENT_USER, login });
         dispatch({
           type: OWNER_OF_REPO,
           login,
-          info: collectOwnerInfo(res[0].owner)
+          info: collectOwnerInfo(repos[0].owner)
         });
+
         dispatch({
           type: REPOS_REPLACE_ALL,
           login,
-          repos: res.map(collectRepoInfo)
+          repos: repos.map(collectRepoInfo),
+          nextPageUrl
         });
       })
       .catch(err => {
-        const message = err.toString();
-        dispatch({ type: REPOS_ERROR, message })
+        //const message = err.toString();
+        //dispatch({ type: REPOS_ERROR, message })
       })
   );
 };
