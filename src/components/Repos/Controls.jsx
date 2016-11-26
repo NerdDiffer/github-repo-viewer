@@ -20,6 +20,12 @@ class ReposControls extends Component {
   constructor(props) {
     super(props);
 
+    const { login } = this.props;
+
+    if (login) {
+      this.props.getRepos(login);
+    }
+
     this.submitForm = this.submitForm.bind(this);
   }
 
@@ -55,8 +61,12 @@ const form = reduxForm({
   form: 'repos'
 })(ReposControls);
 
+const mapStateToProps = ({ current }) => {
+  const { login } = current;
+  return { login };
+};
 const ConnectedReposControls = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(form);
 
