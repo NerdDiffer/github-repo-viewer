@@ -1,20 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { reduxForm, Field as ReduxFormField } from 'redux-form';
+import { Form, Button } from 'semantic-ui-react';
 import * as actions from '../../state/actions/repos';
-
-export const InputField = field => {
-  const { type, meta, input } = field;
-  const isErrorPresent = meta.touched && meta.error;
-
-  return (
-    <div className="form_field_container">
-      <input {...input} type={type} />
-      {isErrorPresent ? <span className="error">{meta.error}</span> : null}
-    </div>
-  );
-};
 
 class ReposControls extends Component {
   constructor(props) {
@@ -29,45 +17,39 @@ class ReposControls extends Component {
     this.submitForm = this.submitForm.bind(this);
   }
 
-  submitForm({ login }) {
+  submitForm(ev, { login }) {
+    ev.preventDefault();
     this.props.getRepos(login);
   }
 
   render() {
-    const { handleSubmit } = this.props;
-
     return (
-      <form onSubmit={handleSubmit(this.submitForm)}>
-        <fieldset>
-          <label>Username</label>
-          <ReduxFormField
+      <Form onSubmit={this.submitForm}>
+        <Form.Group>
+          <Form.Input
             name="login"
             type="text"
-            component={InputField}
+            label="Username"
           />
-        </fieldset>
-        <br />
-        <button action="submit">Refresh</button>
-      </form>
+          <Button action="submit">get user repos</Button>
+        </Form.Group>
+      </Form>
     );
   }
 }
-
-const mapDispatchToProps = dispatch => (
-  bindActionCreators({ ...actions }, dispatch)
-);
-
-const form = reduxForm({
-  form: 'repos'
-})(ReposControls);
 
 const mapStateToProps = ({ current }) => {
   const { login } = current;
   return { login };
 };
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({ ...actions }, dispatch)
+);
+
 const ConnectedReposControls = connect(
   mapStateToProps,
   mapDispatchToProps
-)(form);
+)(ReposControls);
 
 export default ConnectedReposControls;
