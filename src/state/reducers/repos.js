@@ -3,7 +3,9 @@ import {
   REPOS_ERROR,
 } from '../constants/actionTypes';
 
-const reposForUser = (prevState = {}, action) => {
+const getFallbackState = () => ({ repos: [], nextPageUrl: null });
+
+const reposForUser = (prevState = getFallbackState(), action) => {
   switch(action.type) {
     case REPOS_REPLACE_ALL: {
       const { repos, nextPageUrl } = action;
