@@ -24,7 +24,7 @@ export const getRepos = login => {
       .then(res => {
         dispatch({ type: CURRENT_USER, login });
         dispatch({
-          type: REPO_OWNER,
+          type: OWNER_OF_REPO,
           login,
           info: collectOwnerInfo(res[0].owner)
         });
@@ -35,7 +35,8 @@ export const getRepos = login => {
         });
       })
       .catch(err => {
-        dispatch({ type: REPOS_ERROR })
+        const message = err.toString();
+        dispatch({ type: REPOS_ERROR, message })
       })
   );
 };
