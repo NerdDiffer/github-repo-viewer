@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { reduxForm, Field as ReduxFormField } from 'redux-form';
+import { Table } from 'semantic-ui-react';
 import * as actions from '../../state/actions/repos';
 import Repo from './Repo'
 import ReposControls from './Controls';
@@ -20,7 +21,11 @@ class Repos extends Component {
       return null;
     } else {
       return (
-        {reposForSelectedUser.map((data, ind) => (<Repo key={ind} data={data} />))}
+        <Table celled structured>
+          <Table.Body>
+            {reposForSelectedUser.map((data, ind) => (<Repo key={ind} data={data} />))}
+          </Table.Body>
+        </Table>
       );
     }
   }
