@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Modal, List, Image, Label } from 'semantic-ui-react';
+import { shortIso } from '../../utils/dateFormatting';
 
 const HireableLabel = ({ isHireable }) => {
   if (!isHireable) {
@@ -17,7 +18,7 @@ const Owner = ({ data, ToggleModal }) => {
   const { login, id, avatar_url, gravatar_url, html_url, type, name, location, email, hireable, public_repos, followers, following, created_at } = data;
 
   const imageSize = '40%';
-  const dateStr = new Date(created_at).toDateString();
+  const dateStr = created_at ? shortIso(created_at) : null;
   const listItems = [
     email, location, `${followers} followers`,
     `${public_repos} public repos`, `Member since: ${dateStr}`

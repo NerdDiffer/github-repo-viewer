@@ -41,6 +41,7 @@ class Repos extends Component {
               <Table.HeaderCell content="description" />
               <Table.HeaderCell content="watchers" />
               <Table.HeaderCell content="language" />
+              <Table.HeaderCell content="last updated" />
             </Table.Row>
           </Table.Header>
           <Table.Body>
