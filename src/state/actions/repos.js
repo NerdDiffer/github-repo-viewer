@@ -13,6 +13,19 @@ const collectRepoInfo = repo => {
   return { id, name, description, language, watchers_count, watchers, size, created_at, updated_at, pushed_at, html_url };
 };
 
+export const sortRepos = (login, repos, secondarySortCriteria) => {
+  return (dispatch, getState) => {
+    const sortedRepos = sort(repos, secondarySortCriteria);
+
+    dispatch({
+      type: REPOS_SORT,
+      login,
+      repos: sortedRepos,
+      secondarySortCriteria
+    });
+  }
+};
+
 export const getRepos = login => {
   return (dispatch, getState) => {
     const currState = getState().repos[login];
@@ -28,18 +41,19 @@ export const getRepos = login => {
 
         dispatch({ type: CURRENT_USER, login });
 
+        const mappedRepos = repos.map(collectRepoInfo);
+
         dispatch({
           type: REPOS_REPLACE_ALL,
           login,
-          repos: repos.map(collectRepoInfo),
+          repos: mappedRepos,
           nextPageUrl
         });
 
-        return repos;
+        return mappedRepos;
       })
       .then(repos => {
-        const sortedRepos = sort(repos);
-        dispatch({ type: REPOS_SORT, repos: sortedRepos, login });
+        dispatch(sortRepos(login, repos, { key: 'updated_at', dir: 'desc' }));
       })
       .catch(err => {
         //const message = err.toString();

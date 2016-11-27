@@ -4,9 +4,21 @@ import {
   REPOS_SORT
 } from '../constants/actionTypes';
 
-const getFallbackState = () => ({ repos: [], nextPageUrl: null });
+const getFallbackState = key => {
+  const defaultState = {
+    login: {
+      repos: [],
+      nextPageUrl: null
+    }
+  };
 
-const reposForUser = (prevState = getFallbackState(), action) => {
+  return defaultState[key] || {
+    byUser: {},
+    secondarySortCriteria: { key: 'name', dir: 'asc' }
+  };
+};
+
+const reposForUser = (prevState = getFallbackState('login'), action) => {
   switch(action.type) {
     case REPOS_REPLACE_ALL: {
       const { repos, nextPageUrl } = action;
@@ -22,7 +34,7 @@ const reposForUser = (prevState = getFallbackState(), action) => {
 
       return {
         ...prevState,
-        repos: [...repos]
+        repos: [...repos],
       }
     }
     default:
@@ -30,15 +42,19 @@ const reposForUser = (prevState = getFallbackState(), action) => {
   }
 };
 
-const ReposReducer = (prevState = {}, action) => {
+const ReposReducer = (prevState = getFallbackState(), action) => {
   switch(action.type) {
     case REPOS_SORT:
     case REPOS_REPLACE_ALL: {
-      const { login } = action;
+      const { login, secondarySortCriteria } = action;
 
       return {
         ...prevState,
-        [login]: reposForUser(prevState[login], action)
+        secondarySortCriteria: { ...secondarySortCriteria },
+        byUser: {
+          ...prevState.byUser,
+          [login]: reposForUser(prevState[login], action)
+        }
       };
     }
     default:
