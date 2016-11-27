@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Table, Button } from 'semantic-ui-react';
+import { Table, Button, Icon } from 'semantic-ui-react';
 import * as actions from '../../state/actions/repos';
 import Repo from './Repo'
 import Owner from './Owner'
@@ -12,6 +12,18 @@ class Repos extends Component {
     super(props);
 
     this.renderChildren = this.renderChildren.bind(this);
+    this.handleSortByName = this.handleClickHeader.bind(this, 'name');
+    this.handleSortByLanguage = this.handleClickHeader.bind(this, 'language');
+    this.handleSortByUpdatedAt = this.handleClickHeader.bind(this, 'updated_at');
+  }
+
+  // pass in value from cell (key to sort by) and toggle sorting direction
+  handleClickHeader(key) {
+    const { sortDir, sortKey, nameOfSelectedUser, reposForSelectedUser } = this.props;
+    const dir = sortDir === 'asc' ? 'desc' : 'asc';
+    const criteria = { key, dir };
+
+    this.props.sortRepos(nameOfSelectedUser, reposForSelectedUser, criteria);
   }
 
   renderHeader() {
@@ -33,15 +45,36 @@ class Repos extends Component {
     if (!reposForSelectedUser) {
       return null;
     } else {
+      const { sortKey, sortDir } = this.props;
+
+      const setIcon = key => {
+        if (key !== sortKey) {
+          return null;
+        } else {
+          return sortDir === 'asc' ? 'sort ascending' : 'sort descending';
+        }
+      };
+
       return (
         <Table celled structured>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell content="name" />
+              <Table.HeaderCell
+                content="name"
+                icon={setIcon('name')}
+                onClick={this.handleSortByName} />
               <Table.HeaderCell content="description" />
               <Table.HeaderCell content="watchers" />
-              <Table.HeaderCell content="language" />
-              <Table.HeaderCell content="last updated" />
+              <Table.HeaderCell
+                content="language"
+                icon={setIcon('language')}
+                onClick={this.handleSortByLanguage}
+              />
+              <Table.HeaderCell
+                content="updated at"
+                icon={setIcon('updated_at')}
+                onClick={this.handleSortByUpdatedAt}
+              />
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -73,17 +106,25 @@ class Repos extends Component {
 
 const mapStateToProps = ({ current, repos, owners }) => {
   const { login } = current;
-  const { byUser: reposByUser } = repos;
+  const { byUser: reposByUser, secondarySortCriteria: sort } = repos;
+  const { key: sortKey, dir: sortDir } = sort;
 
   return {
     nameOfSelectedUser: login,
     reposForSelectedUser: reposByUser[login] ? reposByUser[login].repos : null,
-    selectedUser: owners[login] || null
+    selectedUser: owners[login] || null,
+    sortKey,
+    sortDir
   };
 };
 
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({ ...actions }, dispatch)
+);
+
 const ConnectedRepos = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Repos);
 
 export default ConnectedRepos;
