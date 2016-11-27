@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Table } from 'semantic-ui-react';
+import { Table, Button } from 'semantic-ui-react';
 import * as actions from '../../state/actions/repos';
 import Repo from './Repo'
 import Owner from './Owner'
@@ -12,6 +12,19 @@ class Repos extends Component {
     super(props);
 
     this.renderChildren = this.renderChildren.bind(this);
+  }
+
+  renderHeader() {
+    const { selectedUser, nameOfSelectedUser } = this.props;
+
+    if (!nameOfSelectedUser) {
+      return null;
+    } else if (!!selectedUser){
+      const { name, login } = selectedUser;
+      return (<h4>Code by {name || login}</h4>);
+    } else {
+      return (<h4>Code by {nameOfSelectedUser}</h4>);
+    }
   }
 
   renderChildren() {
@@ -39,13 +52,18 @@ class Repos extends Component {
   }
 
   render() {
-    const { selectedUser } = this.props;
+    const { selectedUser, nameOfSelectedUser } = this.props;
 
     return (
       <div className="repos list">
         <h2>Repos</h2>
         <ReposControls />
+        <Owner
+          ToggleModal={<Button content={`More about ${nameOfSelectedUser}`} />}
+          data={selectedUser}
+        />
         <br />
+        {this.renderHeader(this.props)}
         {this.renderChildren()}
       </div>
     );

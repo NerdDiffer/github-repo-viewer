@@ -14,7 +14,7 @@ const mapLangToLabel = {
 const Repo = ({ data }) => {
   const  { id, name, description, language, watchers_count, watchers, size, created_at, updated_at, pushed_at, html_url } = data;
 
-  const color = mapLangToLabel[language.toLowerCase()];
+  const color = mapLangToLabel[language && language.toLowerCase()];
 
   return (
     <Table.Row className="repo">
