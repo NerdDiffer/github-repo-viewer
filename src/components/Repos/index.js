@@ -72,10 +72,11 @@ class Repos extends Component {
 
 const mapStateToProps = ({ current, repos, owners }) => {
   const { login } = current;
+  const { byUser: reposByUser } = repos;
 
   return {
     nameOfSelectedUser: login,
-    reposForSelectedUser: repos[login] ? repos[login].repos : null,
+    reposForSelectedUser: reposByUser[login] ? reposByUser[login].repos : null,
     selectedUser: owners[login] || null
   };
 };
