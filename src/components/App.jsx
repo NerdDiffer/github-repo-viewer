@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Segment } from 'semantic-ui-react';
+import FlashMessage from './FlashMessage';
 
 const App = props => {
   return (
@@ -9,7 +10,8 @@ const App = props => {
       text
     >
       <Segment>
-        <h1>React Redux Template</h1>
+        <FlashMessage />
+        <h1>Github Repo Viewer</h1>
         {props.children}
       </Segment>
     </Container>
