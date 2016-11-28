@@ -61,8 +61,9 @@ export const getRepos = login => {
         dispatch(sortRepos(login, repos, { key: 'updated_at', dir: 'desc' }));
       })
       .catch(err => {
+        console.log(err);
         const { message } = err.json;
-        dispatch({ type: REPOS_ERROR, message });
+        dispatch({ type: REPOS_ERROR, payload: message })
       })
   };
 };
