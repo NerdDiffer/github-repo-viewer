@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Table, Button, Icon } from 'semantic-ui-react';
+import { Table, Button, Icon, Divider } from 'semantic-ui-react';
 import * as actions from '../../state/actions/repos';
-import Repo from './Repo'
 import Owner from './Owner'
 import ReposControls from './Controls';
+import ReposList from './List';
 
 class Repos extends Component {
   constructor(props) {
@@ -47,40 +47,12 @@ class Repos extends Component {
     } else {
       const { sortKey, sortDir } = this.props;
 
-      const setIcon = key => {
-        if (key !== sortKey) {
-          return null;
-        } else {
-          return sortDir === 'asc' ? 'sort ascending' : 'sort descending';
-        }
-      };
-
       return (
-        <Table celled structured>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell
-                content="name"
-                icon={setIcon('name')}
-                onClick={this.handleSortByName} />
-              <Table.HeaderCell content="description" />
-              <Table.HeaderCell content="watchers" />
-              <Table.HeaderCell
-                content="language"
-                icon={setIcon('language')}
-                onClick={this.handleSortByLanguage}
-              />
-              <Table.HeaderCell
-                content="updated at"
-                icon={setIcon('updated_at')}
-                onClick={this.handleSortByUpdatedAt}
-              />
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {reposForSelectedUser.map((data, ind) => (<Repo key={ind} data={data} />))}
-          </Table.Body>
-        </Table>
+        <ReposList sortKey={sortKey} sortDir={sortDir} repos={reposForSelectedUser}
+          handleSortByName={this.handleSortByName}
+          handleSortByLanguage={this.handleSortByLanguage}
+          handleSortByUpdatedAt={this.handleSortByUpdatedAt}
+        />
       );
     }
   }
@@ -88,16 +60,18 @@ class Repos extends Component {
   render() {
     const { selectedUser, nameOfSelectedUser } = this.props;
 
+    const { isFetching } = selectedUser || { isFetching: false };
+
     return (
       <div className="repos list">
         <h2>Repos</h2>
         <ReposControls />
+        <Divider section />
+        {this.renderHeader(this.props)}
         <Owner
-          ToggleModal={<Button content={`More about ${nameOfSelectedUser}`} />}
+          ToggleModal={<Button content={`More about ${nameOfSelectedUser}`} loading={isFetching} />}
           data={selectedUser}
         />
-        <br />
-        {this.renderHeader(this.props)}
         {this.renderChildren()}
       </div>
     );

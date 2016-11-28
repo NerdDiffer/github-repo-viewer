@@ -31,7 +31,8 @@ class ReposControls extends Component {
     this.setState({ value });
   }
 
-  handleGetRepos() {
+  handleGetRepos(e) {
+    e.preventDefault();
     const { value } = this.state;
     this.props.getRepos(value)
       .then(() => this.setState({ value: '' }))
@@ -47,19 +48,16 @@ class ReposControls extends Component {
     const { login } = this.props;
 
     return (
-      <div className="repo controls">
-        <Form.Group>
-          <Form.Input
-            name="login"
-            type="text"
-            label="Username"
-            value={this.state.value}
-            onChange={this.updateValue}
-          />
-          <Button onClick={this.handleGetRepos} content="Get another user's repos" />
-          <br />
-        </Form.Group>
-      </div>
+      <Form className="repo controls">
+        <Form.Input
+          name="login"
+          type="text"
+          label="Username"
+          value={this.state.value}
+          onChange={this.updateValue}
+        />
+        <Button onClick={this.handleGetRepos} content="Get another user's repos" />
+      </Form>
     );
   }
 }

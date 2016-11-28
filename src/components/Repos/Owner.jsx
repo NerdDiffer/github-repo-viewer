@@ -12,6 +12,16 @@ const HireableLabel = ({ isHireable }) => {
 
 const LinkToProfile = ({ text, url })  => (<a href={url} target="_blank">{text}</a>);
 
+const UserInfoList = ({ items }) => (
+  <List divided>
+    {
+      items.map((content, ind) => (
+        <List.Item key={ind} content={content} />
+      ))
+    }
+  </List>
+);
+
 const Owner = ({ data, ToggleModal }) => {
   if (!data) { return null; }
 
@@ -34,7 +44,7 @@ const Owner = ({ data, ToggleModal }) => {
         <Image src={avatar_url} width={imageSize} height={imageSize}>
         </Image>
         <Modal.Description>
-          <List items={listItems}></List>
+          <UserInfoList items={listItems} />
         </Modal.Description>
       </Modal.Content>
     </Modal>
