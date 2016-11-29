@@ -47,13 +47,15 @@ const ReposReducer = (prevState = getFallbackState(), action) => {
     case REPOS_SORT:
     case REPOS_REPLACE_ALL: {
       const { login, secondarySortCriteria } = action;
+      const sortCriteria = secondarySortCriteria || prevState.secondarySortCriteria;
+      const prevStateForUser = prevState.byUser[login];
 
       return {
         ...prevState,
-        secondarySortCriteria: { ...secondarySortCriteria },
+        secondarySortCriteria: sortCriteria,
         byUser: {
           ...prevState.byUser,
-          [login]: reposForUser(prevState[login], action)
+          [login]: reposForUser(prevStateForUser, action)
         }
       };
     }

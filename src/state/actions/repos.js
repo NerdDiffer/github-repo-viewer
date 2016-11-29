@@ -28,7 +28,7 @@ export const sortRepos = (login, repos, secondarySortCriteria) => {
 
 export const getRepos = login => {
   return (dispatch, getState) => {
-    const currState = getState().repos[login];
+    const currState = getState().repos.byUser[login];
 
     if (currState && !!currState.repos) {
       return null;
