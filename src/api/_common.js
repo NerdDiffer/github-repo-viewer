@@ -6,8 +6,7 @@ export const fetchConfig = {
   }
 };
 
-const extractNextPageUrl = response => {
-  const link = response.headers.get('link');
+export const extractNextPageUrl = link => {
   if (!link) { return null; }
 
   const nextLink = link.split(',').find(s => s.indexOf('rel="next"') > -1)
@@ -22,7 +21,8 @@ export const preProcessResponse = response => (
       if (response.status >= 400) {
         throw new Error(json);
       } else {
-        const nextPageUrl = extractNextPageUrl(response);
+        const link = response.headers.get('link');
+        const nextPageUrl = extractNextPageUrl(link);
         return { json, nextPageUrl };
       }
     })
