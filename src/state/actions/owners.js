@@ -17,14 +17,23 @@ export const getUser = login => {
 
     return fetchUser(login)
       .then(res => {
-        console.log(res);
-        const { user } = res;
+        const { status } = res;
+
+        if (status >= 400) {
+          throw Error(res);
+        }
+
+        const { json } = res;
 
         dispatch({
           type: USER_INFO,
           login,
-          info: collectOwnerInfo(user)
+          info: collectOwnerInfo(json)
         });
+      })
+      .catch(err => {
+        const { message } = err.json;
+        dispatch({ type: USER_ERROR, message });
       })
   };
 };
