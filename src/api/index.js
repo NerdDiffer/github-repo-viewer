@@ -11,14 +11,12 @@ export const fetchUserRepos = username => {
 
   const url = `${BASE_URL}/users/${username}/repos?${params}`;
   return fetch(url, config)
-    .then(response => preProcessResponse(response))
-    .then(({ json, nextPageUrl }) => ({ repos: json, nextPageUrl }));
+    .then(response => preProcessResponse(response));
 };
 
 // GET /users/:username
 export const fetchUser = username => {
   const url = `${BASE_URL}/users/${username}`;
   return fetch(url, config)
-    .then(response => preProcessResponse(response))
-    .then(({ json }) => ({ user: json }));
+    .then(response => preProcessResponse(response));
 };

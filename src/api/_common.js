@@ -15,15 +15,18 @@ export const extractNextPageUrl = link => {
   return nextLink.split(';')[0].slice(1, -1)
 }
 
-export const preProcessResponse = response => (
-  response.json()
+export const preProcessResponse = response => {
+  return response.json()
     .then(json => {
-      if (response.status >= 400) {
-        throw new Error(json);
+      const { status, statusText, ok } = response;
+
+      if (!ok) {
+        const err = { status, statusText, ok, json };
+        return Promise.reject(err);
       } else {
         const link = response.headers.get('link');
         const nextPageUrl = extractNextPageUrl(link);
-        return { json, nextPageUrl };
+        return { status, statusText, ok, json, nextPageUrl };
       }
     })
-);
+};
