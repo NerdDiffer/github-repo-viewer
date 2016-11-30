@@ -4,6 +4,7 @@ import {
   USER_ERROR
 } from '../constants/actionTypes';
 import { fetchUser } from '../../api';
+import { clearMessage } from './message';
 
 // package relevant information about a user
 const collectOwnerInfo = user => {
@@ -31,9 +32,10 @@ export const getUser = login => {
           info: collectOwnerInfo(json)
         });
       })
+      .then(() => dispatch(clearMessage()))
       .catch(err => {
         const { message } = err.json;
-        dispatch({ type: USER_ERROR, message });
+        dispatch({ type: USER_ERROR, message, login });
       })
   };
 };

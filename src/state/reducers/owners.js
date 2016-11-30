@@ -12,10 +12,17 @@ const reduceUserInfo = (prevState = {}, action) => {
         isFetching: true
       };
     }
+    case USER_ERROR: {
+      return {
+        isValid: false,
+        isFetching: false
+      };
+    }
     case USER_INFO: {
       const { info } = action;
 
       return {
+        isValid: true,
         isFetching: false,
         ...info
       };
@@ -27,6 +34,7 @@ const reduceUserInfo = (prevState = {}, action) => {
 
 const OwnersReducer = (prevState = {}, action) => {
   switch(action.type) {
+    case USER_ERROR:
     case USER_START:
     case USER_INFO: {
       const { login } = action;
