@@ -28,7 +28,7 @@ const MessageReducer = (prevState = {}, action) => {
     case REPOS_ERROR: {
       return {
         format: 'error',
-        message: { ...parseMessage(payload) }
+        ...parseMessage(payload)
       };
     }
     default: {

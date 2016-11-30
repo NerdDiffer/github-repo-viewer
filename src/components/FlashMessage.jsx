@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Message } from 'semantic-ui-react';
+import { Message, Icon } from 'semantic-ui-react';
 
-const isMessagePresent = ({ message }) => !!message;
+const isMessagePresent = ({ content }) => !!content;
 
 class FlashMessage extends Component {
   constructor(props) {
@@ -31,8 +31,7 @@ class FlashMessage extends Component {
     if (!isVisible) {
       return null;
     } else {
-      const { format, message } = this.props;
-      const { header, listItems, content } = message;
+      const { format, header, listItems, content } = this.props;
 
       return (
         <Message
@@ -50,7 +49,7 @@ class FlashMessage extends Component {
   }
 };
 
-const mapStateToProps = ({ messages }) => ({ ...messages })
+const mapStateToProps = ({ message }) => ({ ...message })
 
 const ConnectedFlashMessage = connect(
   mapStateToProps
