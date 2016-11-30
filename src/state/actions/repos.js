@@ -40,6 +40,7 @@ export const getRepos = login => {
     }
 
     dispatch({ type: REPOS_START, login });
+    dispatch(setCurrentUser(login));
 
     return fetchUserRepos(login)
       .then(res => {
@@ -50,8 +51,6 @@ export const getRepos = login => {
         }
 
         const { json, nextPageUrl } = res;
-
-        dispatch(setCurrentUser(login));
 
         const mappedRepos = json.map(collectRepoInfo);
 

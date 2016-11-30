@@ -41,6 +41,7 @@ test('Handling a 404 response', t => {
       const actual = store.getActions();
       const expected = [
         { type: ActionTypes.REPOS_START, login },
+        { type: ActionTypes.CURRENT_USER, login },
         { type: ActionTypes.REPOS_ERROR, payload: 'Not Found' },
         { type: ActionTypes.CURRENT_USER, login: null }
       ];

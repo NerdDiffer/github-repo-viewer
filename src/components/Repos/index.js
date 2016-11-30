@@ -6,6 +6,7 @@ import * as actions from '../../state/actions/repos';
 import Owner from './Owner'
 import ReposControls from './Controls';
 import ReposList from './List';
+import Loading from './Loading';
 
 class Repos extends Component {
   constructor(props) {
@@ -31,16 +32,15 @@ class Repos extends Component {
     if (!repoOwner || !repoOwner.isValid) {
       return null;
     } else {
-      const { isFetching, info } = repoOwner;
+      const { info } = repoOwner;
       const { name, login } = info;
 
       const toggleButton = (
-        <Button loading={isFetching} content={`More about ${name || login}`} />
+        <Button content={`More about ${name || login}`} />
       );
 
       return (
         <div className="owner">
-          <h4>Code by {name || login}</h4>
           <Owner
             ToggleModal={toggleButton}
             data={info}
@@ -51,10 +51,12 @@ class Repos extends Component {
   }
 
   renderRepos() {
-    const { repos, repoOwner } = this.props;
+    const { repos, repoOwner, isFetchingRepos } = this.props;
 
     if (!repos || (repoOwner && !repoOwner.isValid)) {
       return null;
+    } else if (isFetchingRepos) {
+      return (<Loading />);
     } else if (repos.length === 0) {
       return (<p>Looks like this user has no repos</p>);
     } else {
@@ -88,9 +90,13 @@ const mapStateToProps = ({ current, repos, owners }) => {
   const { byUser, secondarySortCriteria } = repos;
   const { key, dir } = secondarySortCriteria;
 
+  const repoStateForCurrentLogin = byUser[login];
+  const { isFetching, repos: userRepos } = repoStateForCurrentLogin || { isFetching: false, repos: null };
+
   return {
     nameOfSelectedUser: login,
-    repos: byUser[login] ? byUser[login].repos : null,
+    isFetchingRepos: isFetching,
+    repos: userRepos,
     repoOwner: owners[login] || null,
     sortKey: key,
     sortDir: dir
