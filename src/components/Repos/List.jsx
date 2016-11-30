@@ -5,7 +5,8 @@ import Repo from './Repo'
 const ReposList = (props) => {
   const {
     sortKey, sortDir, repos,
-    handleSortByName, handleSortByLanguage, handleSortByUpdatedAt
+    handleSortByName, handleSortByWatchers,
+    handleSortByLanguage, handleSortByUpdatedAt
   } = props;
 
    const setIcon = key => {
@@ -25,7 +26,11 @@ const ReposList = (props) => {
              icon={setIcon('name')}
              onClick={handleSortByName} />
            <Table.HeaderCell content="description" />
-           <Table.HeaderCell content="watchers" />
+           <Table.HeaderCell
+             content="watchers"
+             icon={setIcon('watchers')}
+             onClick={handleSortByWatchers}
+           />
            <Table.HeaderCell
              content="language"
              icon={setIcon('language')}

@@ -13,6 +13,7 @@ class Repos extends Component {
     super(props);
 
     this.handleSortByName = this.handleClickHeader.bind(this, 'name');
+    this.handleSortByWatchers = this.handleClickHeader.bind(this, 'watchers');
     this.handleSortByLanguage = this.handleClickHeader.bind(this, 'language');
     this.handleSortByUpdatedAt = this.handleClickHeader.bind(this, 'updated_at');
   }
@@ -65,6 +66,7 @@ class Repos extends Component {
       return (
         <ReposList sortKey={sortKey} sortDir={sortDir} repos={repos}
           handleSortByName={this.handleSortByName}
+          handleSortByWatchers={this.handleSortByWatchers}
           handleSortByLanguage={this.handleSortByLanguage}
           handleSortByUpdatedAt={this.handleSortByUpdatedAt}
         />
@@ -87,8 +89,8 @@ class Repos extends Component {
 
 const mapStateToProps = ({ current, repos, owners }) => {
   const { login } = current;
-  const { byUser, secondarySortCriteria } = repos;
-  const { key, dir } = secondarySortCriteria;
+  const { byUser, sortCriteria } = repos;
+  const { key, dir } = sortCriteria;
 
   const repoStateForCurrentLogin = byUser[login];
   const { isFetching, repos: userRepos } = repoStateForCurrentLogin || { isFetching: false, repos: null };
