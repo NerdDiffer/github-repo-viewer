@@ -10,8 +10,8 @@ const App = props => {
       text
     >
       <Segment>
-        <FlashMessage />
         <h1>Github Repo Viewer</h1>
+        <FlashMessage />
         {props.children}
       </Segment>
     </Container>

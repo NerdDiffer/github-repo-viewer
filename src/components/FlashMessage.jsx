@@ -1,32 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Message, Icon } from 'semantic-ui-react';
-
-const isMessagePresent = ({ content }) => !!content;
+import * as actions from '../state/actions/current';
 
 class FlashMessage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { isVisible: isMessagePresent(this.props) };
-
-    this.hideMessage = this.hideMessage.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const willHaveMessage = isMessagePresent(nextProps);
-
-    if (willHaveMessage) {
-      this.setState({ isVisible: true });
-    }
-  }
-
-  hideMessage() {
-    this.setState({ isVisible: false });
-  }
-
   render() {
-    const { isVisible } = this.state;
+    const { isVisible } = this.props;
 
     if (!isVisible) {
       return null;
@@ -35,7 +15,6 @@ class FlashMessage extends Component {
 
       return (
         <Message
-          onDismiss={this.hideMessage}
           info={format === 'info'}
           error={format === 'error'}
           warning={format === 'warning'}
@@ -49,10 +28,21 @@ class FlashMessage extends Component {
   }
 };
 
-const mapStateToProps = ({ message }) => ({ ...message })
+const mapStateToProps = ({ current }) => {
+  const { message } = current;
+
+  return {
+    ...message
+  };
+};
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({ ...actions }, dispatch)
+);
 
 const ConnectedFlashMessage = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(FlashMessage);
 
 export default ConnectedFlashMessage;
