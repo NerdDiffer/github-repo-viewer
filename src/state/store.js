@@ -4,7 +4,10 @@ import reducers from './reducers';
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const getInitialState = () => ({
-  current: { login: 'nerddiffer' }
+  current: {
+    login: 'nerddiffer',
+    message: { isVisible: false }
+  }
 });
 
 const store = createStore(

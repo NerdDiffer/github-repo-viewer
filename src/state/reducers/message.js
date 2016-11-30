@@ -1,7 +1,7 @@
 import {
   REPOS_ERROR,
   USER_ERROR,
-  MSG_CLEAR
+  CURRENT_MSG_CLEAR
 } from '../constants/actionTypes';
 
 const parseMessage = payload => {
@@ -33,7 +33,7 @@ const MessageReducer = (prevState = { isVisible: false }, action) => {
         ...parseMessage(payload)
       };
     }
-    case MSG_CLEAR: {
+    case CURRENT_MSG_CLEAR: {
       return {
         isVisible: false
       }
