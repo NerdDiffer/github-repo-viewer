@@ -17,7 +17,7 @@ class ReposControls extends Component {
 
     if (login) {
       this.props.getRepos(login)
-        .then(() => this.handleGetUser());
+        .then(() => this.handleGetUser(login));
     }
 
     this.updateValue = this.updateValue.bind(this);
@@ -34,19 +34,21 @@ class ReposControls extends Component {
   handleGetRepos(e) {
     e.preventDefault();
     const { value } = this.state;
-    this.props.getRepos(value)
+    return this.props.getRepos(value)
       .then(() => this.setState({ value: '' }))
-      .then(() => this.handleGetUser());
+      .then(() => this.handleGetUser(value))
+      .catch(err => {
+        const msg = `${err}, skipping fetch user`;
+        console.log(msg);
+        return msg;
+      });
   }
 
-  handleGetUser() {
-    const { login } = this.props;
-    this.props.getUser(login);
+  handleGetUser(value) {
+    this.props.getUser(value);
   }
 
   render() {
-    const { login } = this.props;
-
     return (
       <Form className="repo controls">
         <Form.Input
@@ -56,7 +58,7 @@ class ReposControls extends Component {
           value={this.state.value}
           onChange={this.updateValue}
         />
-        <Button onClick={this.handleGetRepos} content="Get another user's repos" />
+        <Button onClick={this.handleGetRepos} content="Show another user's repos" />
       </Form>
     );
   }
