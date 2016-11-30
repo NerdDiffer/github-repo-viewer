@@ -1,13 +1,51 @@
 import deepClone from 'lodash.clonedeep';
 
+const sortAsc = (a, b) => {
+  if (a < b) { return -1; } // puts `a` first
+  if (a > b) { return 1; } // puts `b` first
+  return 0;
+};
+
+const sortDesc = (a, b) => {
+  if (a < b) { return 1; } // puts `b` first
+  if (a > b) { return -1; } // puts `a` first
+  return 0;
+};
+
 const comparatorFns = {
-  asc:  (a, b) => a > b,
-  desc: (a, b) => a < b,
+  asc: sortAsc,
+  desc: sortDesc,
   compareRows: (compareFn, key, rowA, rowB) => {
     const valA = rowA[key];
     const valB = rowB[key];
-    return compareFn(valA, valB);
+
+    const comparison = compareFn(valA, valB);
+
+    if (comparison === 0) {
+      // compare by 'updated_at' by putting the most recently updated repo first
+      return sortDesc(rowA.updated_at, rowB.updated_at);
+    } else {
+      return comparison;
+    }
   }
+};
+
+/**
+ * Pre-check sorting criteria. Does not check comparative objects for property
+ * existence. So, another mechanism would be needed to compare with undefined.
+ * @param criteria, {Object} object must have keys: 'dir', 'key'.
+ * @return, {Boolean} returns true if criteria is valid
+ * @throws, {Error} if something is invalid
+ */
+const validateSortCriteria = ({ key, dir }) => {
+  if (typeof key !== 'string') {
+    throw new Error('Must pass in a "key" (as a string) to compare objects. You passed in', key);
+  }
+  if (['asc', 'desc'].indexOf(dir) < 0) {
+    throw new Error('Must sort in one of these two directions: "asc" or "desc". You passed in', dir);
+  }
+
+  return true;
 };
 
 /**
@@ -16,15 +54,8 @@ const comparatorFns = {
  * @param key {String}, name of property on the object, the criteria to sort by.
  * @param direction {String}, the direction to sort by ('asc' or 'desc').
  */
-const sortObjsBy = (rows, key, direction = 'asc') => {
-  if (typeof key !== 'string') {
-    throw new Error('Must pass in a "key" (as a string) to compare objects.');
-  }
-  if (['asc', 'desc'].indexOf(direction) < 0) {
-    throw new Error('Must sort in one of these two directions: "asc" or "desc"');
-  }
-
-  const directionalCompare = comparatorFns[direction];
+const sortObjsBy = (rows, { key, dir }) => {
+  const directionalCompare = comparatorFns[dir];
   const { compareRows } = comparatorFns;
   const directionallyCompareObjs = compareRows.bind(null, directionalCompare, key);
 
@@ -38,33 +69,17 @@ const sortObjsBy = (rows, key, direction = 'asc') => {
  *   - 'watchers', in desc order
  *   - 'name' in asc/desc order || 'updated_at' in asc/desc order
  */
-const sort = (arr, multipleSortOpts) => {
+export default (arr, sortCriteria) => {
   const copy = deepClone(arr);
 
-  let secondarySort;
+  let sortBy;
 
-  if (!multipleSortOpts) {
-    // then sort equal elements (according to num of watchers) by falling back
-    // to a default sort
-    secondarySort = sortObjsBy(copy, 'name', 'asc')
+  if (!sortCriteria) {
+    sortBy = sortObjsBy(copy, { key: 'watchers', dir: 'desc' })
   } else {
-    const { key, dir } = multipleSortOpts;
-    secondarySort = sortObjsBy(copy, key, dir);
+    validateSortCriteria(sortCriteria);
+    sortBy = sortObjsBy(copy, sortCriteria);
   }
 
-  return copy.sort((a, b) => {
-    // compare by watchers, descending order
-    const watchersA = a.watchers;
-    const watchersB = b.watchers;
-
-    if (watchersA < watchersB) {
-      return 1; // put `b` first
-    } else if (watchersA > watchersB) {
-      return -1; // put `a` first
-    } else {
-      return secondarySort(a, b);
-    }
-  });
+  return copy.sort(sortBy);
 };
-
-export default sort;
