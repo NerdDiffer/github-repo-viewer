@@ -1,6 +1,7 @@
 import {
   REPOS_ERROR,
-  USER_ERROR
+  USER_ERROR,
+  MSG_CLEAR
 } from '../constants/actionTypes';
 
 const parseMessage = payload => {
@@ -21,15 +22,21 @@ const parseMessage = payload => {
   }
 };
 
-const MessageReducer = (prevState = {}, action) => {
+const MessageReducer = (prevState = { isVisible: false }, action) => {
   const { payload } = action;
 
   switch(action.type) {
     case REPOS_ERROR: {
       return {
+        isVisible: true,
         format: 'error',
         ...parseMessage(payload)
       };
+    }
+    case MSG_CLEAR: {
+      return {
+        isVisible: false
+      }
     }
     default: {
       return prevState;

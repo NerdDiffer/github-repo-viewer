@@ -6,3 +6,5 @@ export const REPOS_SORT = 'REPOS_SORT'
 export const USER_START = 'USER_START';
 export const USER_INFO = 'USER_INFO';
 export const USER_ERROR = 'USER_ERROR';
+
+export const MSG_CLEAR = 'MSG_CLEAR';

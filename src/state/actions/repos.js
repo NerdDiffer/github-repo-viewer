@@ -4,6 +4,7 @@ import {
   CURRENT_USER,
   REPOS_SORT
 } from '../constants/actionTypes';
+import { clearMessage } from './message';
 import { fetchUserRepos } from '../../api';
 import sort from '../../utils/sorting';
 
@@ -60,6 +61,7 @@ export const getRepos = login => {
       .then(repos => {
         dispatch(sortRepos(login, repos, { key: 'updated_at', dir: 'desc' }));
       })
+      .then(() => dispatch(clearMessage()))
       .catch(err => {
         console.log(err);
         const { message } = err.json;
