@@ -11,7 +11,6 @@ class Repos extends Component {
   constructor(props) {
     super(props);
 
-    this.renderChildren = this.renderChildren.bind(this);
     this.handleSortByName = this.handleClickHeader.bind(this, 'name');
     this.handleSortByLanguage = this.handleClickHeader.bind(this, 'language');
     this.handleSortByUpdatedAt = this.handleClickHeader.bind(this, 'updated_at');
@@ -19,36 +18,50 @@ class Repos extends Component {
 
   // pass in value from cell (key to sort by) and toggle sorting direction
   handleClickHeader(key) {
-    const { sortDir, sortKey, nameOfSelectedUser, reposForSelectedUser } = this.props;
+    const { sortDir, nameOfSelectedUser, repos } = this.props;
     const dir = sortDir === 'asc' ? 'desc' : 'asc';
     const criteria = { key, dir };
 
-    this.props.sortRepos(nameOfSelectedUser, reposForSelectedUser, criteria);
+    this.props.sortRepos(nameOfSelectedUser, repos, criteria);
   }
 
-  renderHeader() {
-    const { selectedUser, nameOfSelectedUser } = this.props;
+  renderOwner() {
+    const { repoOwner } = this.props;
 
-    if (!nameOfSelectedUser) {
+    if (!repoOwner || !repoOwner.isValid) {
       return null;
-    } else if (!!selectedUser){
-      const { name, login } = selectedUser;
-      return (<h4>Code by {name || login}</h4>);
     } else {
-      return (<h4>Code by {nameOfSelectedUser}</h4>);
+      const { isFetching, info } = repoOwner;
+      const { name, login } = info;
+
+      const toggleButton = (
+        <Button loading={isFetching} content={`More about ${name || login}`} />
+      );
+
+      return (
+        <div className="owner">
+          <h4>Code by {name || login}</h4>
+          <Owner
+            ToggleModal={toggleButton}
+            data={info}
+          />
+        </div>
+      );
     }
   }
 
-  renderChildren() {
-    const { reposForSelectedUser } = this.props;
+  renderRepos() {
+    const { repos, repoOwner } = this.props;
 
-    if (!reposForSelectedUser) {
+    if (!repos || (repoOwner && !repoOwner.isValid)) {
       return null;
+    } else if (repos.length === 0) {
+      return (<p>Looks like this user has no repos</p>);
     } else {
       const { sortKey, sortDir } = this.props;
 
       return (
-        <ReposList sortKey={sortKey} sortDir={sortDir} repos={reposForSelectedUser}
+        <ReposList sortKey={sortKey} sortDir={sortDir} repos={repos}
           handleSortByName={this.handleSortByName}
           handleSortByLanguage={this.handleSortByLanguage}
           handleSortByUpdatedAt={this.handleSortByUpdatedAt}
@@ -58,21 +71,13 @@ class Repos extends Component {
   }
 
   render() {
-    const { selectedUser, nameOfSelectedUser } = this.props;
-
-    const { isFetching } = selectedUser || { isFetching: false };
-
     return (
       <div className="repos list">
         <h2>Repos</h2>
         <ReposControls />
         <Divider section />
-        {this.renderHeader(this.props)}
-        <Owner
-          ToggleModal={<Button content={`More about ${nameOfSelectedUser}`} loading={isFetching} />}
-          data={selectedUser}
-        />
-        {this.renderChildren()}
+        {this.renderOwner()}
+        {this.renderRepos()}
       </div>
     );
   }
@@ -80,15 +85,15 @@ class Repos extends Component {
 
 const mapStateToProps = ({ current, repos, owners }) => {
   const { login } = current;
-  const { byUser: reposByUser, secondarySortCriteria: sort } = repos;
-  const { key: sortKey, dir: sortDir } = sort;
+  const { byUser, secondarySortCriteria } = repos;
+  const { key, dir } = secondarySortCriteria;
 
   return {
     nameOfSelectedUser: login,
-    reposForSelectedUser: reposByUser[login] ? reposByUser[login].repos : null,
-    selectedUser: owners[login] || null,
-    sortKey,
-    sortDir
+    repos: byUser[login] ? byUser[login].repos : null,
+    repoOwner: owners[login] || null,
+    sortKey: key,
+    sortDir: dir
   };
 };
 
