@@ -1,5 +1,5 @@
 import test from 'ava';
-import { sort } from './helpers';
+import sort from '../../../src/utils/sorting';
 
 let input;
 
