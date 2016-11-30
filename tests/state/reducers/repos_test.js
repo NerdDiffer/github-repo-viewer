@@ -6,11 +6,11 @@ import { isObject } from '../../assertions';
 test('shape of fallback state', t => {
   const actual = reducer(undefined, {});
   const keys = Object.keys(actual);
-  t.deepEqual(keys, ['byUser', 'secondarySortCriteria']);
+  t.deepEqual(keys, ['byUser', 'sortCriteria']);
 
   t.true(isObject(actual.byUser));
 
-  const expectedSortCriteria = actual.secondarySortCriteria;
+  const expectedSortCriteria = actual.sortCriteria;
   t.true(isObject(expectedSortCriteria));
   t.deepEqual(Object.keys(expectedSortCriteria), ['key', 'dir']);
 });
@@ -25,7 +25,7 @@ test('replacing all user repos', t => {
 
   const actual = reducer(undefined, action);
   const expected = {
-    secondarySortCriteria: { key: 'name', dir: 'asc' },
+    sortCriteria: { key: 'watchers', dir: 'desc' },
     byUser: {
       login: {
         repos: [{ foo: 'bar' }],
@@ -40,7 +40,7 @@ test('replacing all user repos', t => {
 
 test('sorting user repos', t => {
   const mockState = {
-    secondarySortCriteria: { key: 'name', dir: 'asc' },
+    sortCriteria: { key: 'name', dir: 'asc' },
     byUser: {
       login: {
         nextPageUrl: 'link to next page',
@@ -59,12 +59,12 @@ test('sorting user repos', t => {
       { name: 'alpha', updated_at: 1 },
       { name: 'bravo', updated_at: 0 }
     ],
-    secondarySortCriteria: { key: 'updated_at', dir: 'desc' }
+    sortCriteria: { key: 'updated_at', dir: 'desc' }
   };
 
   const actual = reducer(mockState, action);
   const expected = {
-    secondarySortCriteria: { key: 'updated_at', dir: 'desc' },
+    sortCriteria: { key: 'updated_at', dir: 'desc' },
     byUser: {
       login: {
         repos: [

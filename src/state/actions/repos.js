@@ -14,15 +14,15 @@ const collectRepoInfo = repo => {
   return { id, name, description, language, watchers_count, watchers, size, created_at, updated_at, pushed_at, html_url };
 };
 
-export const sortRepos = (login, repos, secondarySortCriteria) => {
+export const sortRepos = (login, repos, sortCriteria) => {
   return (dispatch, getState) => {
-    const sortedRepos = sort(repos, secondarySortCriteria);
+    const sortedRepos = sort(repos, sortCriteria);
 
     dispatch({
       type: REPOS_SORT,
       login,
       repos: sortedRepos,
-      secondarySortCriteria
+      sortCriteria
     });
   }
 };
@@ -65,7 +65,7 @@ export const getRepos = login => {
       })
       .then(repos => {
         if (repos) {
-          dispatch(sortRepos(login, repos, { key: 'updated_at', dir: 'desc' }));
+          dispatch(sortRepos(login, repos, { key: 'watchers', dir: 'desc' }));
         }
       })
       .then(() => {

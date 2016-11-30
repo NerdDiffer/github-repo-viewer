@@ -16,7 +16,7 @@ const getFallbackState = key => {
 
   return defaultState[key] || {
     byUser: {},
-    secondarySortCriteria: { key: 'name', dir: 'asc' }
+    sortCriteria: { key: 'watchers', dir: 'desc' }
   };
 };
 
@@ -55,13 +55,13 @@ const ReposReducer = (prevState = getFallbackState(), action) => {
     case REPOS_SORT:
     case REPOS_START:
     case REPOS_REPLACE_ALL: {
-      const { login, secondarySortCriteria } = action;
-      const sortCriteria = secondarySortCriteria || prevState.secondarySortCriteria;
+      const { login, sortCriteria } = action;
+      const criteria = sortCriteria || prevState.sortCriteria;
       const prevStateForUser = prevState.byUser[login];
 
       return {
         ...prevState,
-        secondarySortCriteria: sortCriteria,
+        sortCriteria: criteria,
         byUser: {
           ...prevState.byUser,
           [login]: reposForUser(prevStateForUser, action)
