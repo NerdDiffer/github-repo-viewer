@@ -1,10 +1,10 @@
 import {
+  REPOS_START,
   REPOS_REPLACE_ALL,
   REPOS_ERROR,
-  CURRENT_USER,
-  REPOS_SORT
+  REPOS_SORT,
 } from '../constants/actionTypes';
-import { clearMessage } from './message';
+import { clearMessage, setCurrentUser } from './current';
 import { fetchUserRepos } from '../../api';
 import sort from '../../utils/sorting';
 
@@ -32,8 +32,14 @@ export const getRepos = login => {
     const currState = getState().repos.byUser[login];
 
     if (currState && !!currState.repos) {
-      return null;
+      if (getState().current.message.isVisible) {
+        dispatch(clearMessage());
+      }
+      dispatch(setCurrentUser(login));
+      return Promise.resolve();
     }
+
+    dispatch({ type: REPOS_START, login });
 
     return fetchUserRepos(login)
       .then(res => {
@@ -45,7 +51,7 @@ export const getRepos = login => {
 
         const { json, nextPageUrl } = res;
 
-        dispatch({ type: CURRENT_USER, login });
+        dispatch(setCurrentUser(login));
 
         const mappedRepos = json.map(collectRepoInfo);
 
@@ -56,16 +62,23 @@ export const getRepos = login => {
           nextPageUrl
         });
 
-        return mappedRepos
+        return mappedRepos;
       })
       .then(repos => {
-        dispatch(sortRepos(login, repos, { key: 'updated_at', dir: 'desc' }));
+        if (repos) {
+          dispatch(sortRepos(login, repos, { key: 'updated_at', dir: 'desc' }));
+        }
       })
-      .then(() => dispatch(clearMessage()))
+      .then(() => {
+        if (getState().current.message.isVisible) {
+          dispatch(clearMessage());
+        }
+      })
       .catch(err => {
-        console.log(err);
         const { message } = err.json;
         dispatch({ type: REPOS_ERROR, payload: message })
+        dispatch(setCurrentUser(null));
+        return;
       })
   };
 };
