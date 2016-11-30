@@ -27,8 +27,9 @@ test('USER_INFO', t => {
   const actual = reducer(undefined, action);
   const expected = {
     KingCrimson: {
+      isValid: true,
       isFetching: false,
-      bio: 'matte kudasai'
+      info: { bio: 'matte kudasai' }
     }
   };
 

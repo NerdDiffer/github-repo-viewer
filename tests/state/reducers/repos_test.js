@@ -29,7 +29,8 @@ test('replacing all user repos', t => {
     byUser: {
       login: {
         repos: [{ foo: 'bar' }],
-        nextPageUrl: 'link to next page'
+        nextPageUrl: 'link to next page',
+        isFetching: false
       }
     }
   };
