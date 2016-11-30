@@ -24,7 +24,7 @@ const reduceUserInfo = (prevState = {}, action) => {
       return {
         isValid: true,
         isFetching: false,
-        ...info
+        info: { ...info }
       };
     }
     default:
