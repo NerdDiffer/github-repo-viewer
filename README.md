@@ -1,32 +1,17 @@
-# React Redux Template
+# GitHub Repo Viewer
 
-A template for front-end apps that would like to use:
+View GitHub repos, by user. The build & configuration are based off of
+[react-redux-template](https://github.com/NerdDiffer/react-redux-template).
 
-* react
-* redux
-* react-router
-* ava
-* semantic-ui
+## Installations
 
-#### Redux-related info
+### Application dependencies
 
-Depends on:
+`npm install`
 
-* redux-form
-* redux-thunk
+### Run tests
 
-#### Test-related info
-
-Depends on:
-
-* [ava](https://github.com/avajs/ava)
-* babel-register
-
-#### Commits
-
-For topical commit messages and easy changelog generation, this template uses
-[commitizen](https://github.com/commitizen/cz-cli). Read those instructions for
-how to set it up.
+`npm test`
 
 #### Style framework info
 
@@ -50,16 +35,6 @@ Read these to know more:
 * [Theming](http://semantic-ui.com/usage/theming.html)
 * [React integration](http://react.semantic-ui.com/)
 
-## Installations
-
-### Application dependencies
-
-`npm install`
-
-### Run tests
-
-`npm test`
-
 ## Starting, building
 
 ### Development
@@ -67,3 +42,16 @@ Read these to know more:
 * Bundle application & serve it in-memory:
   * `npm start`
 * Visit [http://localhost:8080](http://localhost:8080).
+
+### Production
+
+To locally test a production build:
+
+* Remove all build files
+  * `npm run clean`
+* Install production dependencies
+  * `npm install --production`
+* Build style framework, bundle application & output to `public/build`
+  * `npm run heroku-postbuild`
+* Start app:
+  * `NODE_ENV=production npm start`
