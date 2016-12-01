@@ -10,7 +10,9 @@
     "test": "ava",
     "start": "node index.js",
     "clean": "rm -rf node_modules/ semantic-ui/dist/ public/build/",
-    "build:styles": "cd semantic-ui/ && gulp build"
+    "build:styles": "cd semantic-ui/ && gulp build",
+    "build:prod": "NODE_ENV=production node config/build.production.js",
+    "heroku-postbuild": "npm run build:styles && npm run build:prod"
   },
   "keywords": [],
   "author": "Rafael Espinoza <rafael@rafaelespinoza.com> (www.rafaelespinoza.com)",
