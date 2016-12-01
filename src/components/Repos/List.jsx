@@ -18,25 +18,32 @@ const ReposList = (props) => {
    };
 
    return (
-     <Table celled structured>
+     <Table celled columns={5} fixed>
        <Table.Header>
          <Table.Row>
            <Table.HeaderCell
+             width={3}
              content="name"
              icon={setIcon('name')}
              onClick={handleSortByName} />
-           <Table.HeaderCell content="description" />
            <Table.HeaderCell
+             width={5}
+             content="description"
+           />
+           <Table.HeaderCell
+             width={2}
              content="watchers"
              icon={setIcon('watchers')}
              onClick={handleSortByWatchers}
            />
            <Table.HeaderCell
+             width={3}
              content="language"
              icon={setIcon('language')}
              onClick={handleSortByLanguage}
            />
            <Table.HeaderCell
+             width={3}
              content="updated at"
              icon={setIcon('updated_at')}
              onClick={handleSortByUpdatedAt}
