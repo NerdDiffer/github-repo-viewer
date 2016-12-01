@@ -21,7 +21,7 @@ const collectOwnerInfo = user => {
   return { login, id, avatar_url, gravatar_url, html_url, type, name, location, email, hireable, public_repos, followers, following, created_at };
 };
 
-const showUserInstead = login => {
+export const showUser = login => {
   const thunk = (dispatch, getState) => {
     if (getState().current.message.isVisible) {
       dispatch(clearMessage());
@@ -48,7 +48,7 @@ export const getUser = login => {
 
     if (!!user) {
       if (user.isValid) {
-        dispatch(showUserInstead(login));
+        dispatch(showUser(login));
         return Promise.resolve();
       } else {
         const msg = 'Invalid user';

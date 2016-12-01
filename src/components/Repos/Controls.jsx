@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Form, Button, Dropdown } from 'semantic-ui-react';
 import { getRepos } from '../../state/actions/repos';
-import { getUser } from '../../state/actions/owners';
-import { setCurrentUser } from '../../state/actions/current';
+import { getUser, showUser } from '../../state/actions/owners';
 
 class ReposControls extends Component {
   constructor(props) {
@@ -36,11 +35,9 @@ class ReposControls extends Component {
     if (nextNames.length !== currNames.length) {
       const login = nextNames[nextNames.length - 1];
       const newestOption = { value: login, text: login };
-      console.log(this.state.options);
       const options = this.state.options.concat(newestOption);
 
       this.setState({ options });
-      console.log(this.state.options);
     }
   }
 
@@ -65,7 +62,7 @@ class ReposControls extends Component {
   }
 
   handleDropdownChange(_ev, { name, value }) {
-    return this.props.setCurrentUser(value);
+    return this.props.showUser(value);
   }
 
   handleClickButton(e) {
@@ -117,7 +114,7 @@ const mapStateToProps = ({ current, owners }) => {
 };
 
 const mapDispatchToProps = dispatch => (
-  bindActionCreators({ getUser, getRepos, setCurrentUser }, dispatch)
+  bindActionCreators({ getUser, getRepos, showUser }, dispatch)
 );
 
 const ConnectedReposControls = connect(
