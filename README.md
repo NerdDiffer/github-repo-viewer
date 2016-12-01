@@ -1,7 +1,21 @@
 # GitHub Repo Viewer
 
-View GitHub repos, by user. The build & configuration are based off of
-[react-redux-template](https://github.com/NerdDiffer/react-redux-template).
+View GitHub repos, by user. The build & configuration are based off my boilerplate
+project: [react-redux-template](https://github.com/NerdDiffer/react-redux-template).
+
+**[Live demo](https://repos-by-user.herokuapp.com/)**
+
+##### Some extra features
+
+* Type in another GitHub username to list repos
+* Show info about that user
+* Results are cached, so type in a previously-fetched username to see it again
+  * Try not to refresh the page if you're getting close to the API rate limit!
+* Click table headers to sort and toggle direction
+  * Repos sorted by number of watchers by default.
+  * If two repos are equal in their sorting criteria, it'll sort by last updated
+    in descending order.
+  * You can't sort by repo "description", because that's silly.
 
 ## Installations
 
