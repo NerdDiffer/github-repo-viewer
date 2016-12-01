@@ -37,6 +37,11 @@ consistent styling.
 * Build the source:
   * `npm run build:styles`
 
+There may be an interactive postinstall script, that asks how you want to
+customize your build of `semantic-ui`. Just choose the default choices all the
+through. If there's a problem, make sure to set the `base`, `source` and
+`output` directories as per the configuration file: `semantic.json`.
+
 Component definitions & preset themes are committed to source control.
 This GitHub [issue](https://github.com/Semantic-Org/Semantic-UI/issues/3620)
 recommends it.
