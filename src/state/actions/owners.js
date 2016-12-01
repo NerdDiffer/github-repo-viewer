@@ -1,7 +1,8 @@
 import {
   USER_START,
   USER_INFO,
-  USER_ERROR
+  USER_ERROR,
+  USER_CACHE_LOGIN
 } from '../constants/actionTypes';
 import { fetchUser } from '../../api';
 import { clearMessage, setCurrentUser } from './current';
@@ -31,9 +32,19 @@ const showUserInstead = login => {
   return thunk;
 };
 
-export const getUser = login => {
+export const cacheUser = login => {
   return (dispatch, getState) => {
     const user = getState().owners[login];
+
+    if (!user) {
+      dispatch({ type: USER_CACHE_LOGIN, login });
+    }
+  };
+};
+
+export const getUser = login => {
+  return (dispatch, getState) => {
+    const user = getState().owners.byName[login];
 
     if (!!user) {
       if (user.isValid) {
@@ -70,6 +81,7 @@ export const getUser = login => {
           dispatch(clearMessage());
         }
       })
+      .then(() => dispatch(cacheUser(login)))
       .catch(err => {
         console.log(err);
         const { message } = err.json;

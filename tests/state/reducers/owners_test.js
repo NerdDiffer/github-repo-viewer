@@ -11,7 +11,10 @@ test('USER_START', t => {
 
   const actual = reducer(undefined, action);
   const expected = {
-    KingCrimson: { isFetching: true }
+    logins: [],
+    byName: {
+      KingCrimson: { isFetching: true }
+    }
   };
 
   t.deepEqual(actual, expected);
@@ -26,12 +29,27 @@ test('USER_INFO', t => {
 
   const actual = reducer(undefined, action);
   const expected = {
-    KingCrimson: {
-      isValid: true,
-      isFetching: false,
-      info: { bio: 'matte kudasai' }
+    logins: [],
+    byName: {
+      KingCrimson: {
+        isValid: true,
+        isFetching: false,
+        info: { bio: 'matte kudasai' }
+      }
     }
   };
+
+  t.deepEqual(actual, expected);
+});
+
+test('USER_CACHE_LOGIN', t => {
+  const action = {
+    type: ActionTypes.USER_CACHE_LOGIN,
+    login: 'bar'
+  };
+
+  const actual = reducer({ logins: ['foo'] }, action);
+  const expected = { logins: ['foo', 'bar'] };
 
   t.deepEqual(actual, expected);
 });

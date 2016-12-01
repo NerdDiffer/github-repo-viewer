@@ -1,7 +1,8 @@
 import {
   USER_START,
   USER_INFO,
-  USER_ERROR
+  USER_ERROR,
+  USER_CACHE_LOGIN
 } from '../constants/actionTypes';
 
 const reduceUserInfo = (prevState = {}, action) => {
@@ -32,7 +33,7 @@ const reduceUserInfo = (prevState = {}, action) => {
   }
 };
 
-const OwnersReducer = (prevState = {}, action) => {
+const OwnersReducer = (prevState = { logins: [], byName: {} }, action) => {
   switch(action.type) {
     case USER_ERROR:
     case USER_START:
@@ -41,7 +42,18 @@ const OwnersReducer = (prevState = {}, action) => {
 
       return {
         ...prevState,
-        [login]: reduceUserInfo(prevState[login], action)
+        byName: {
+          ...prevState.byName,
+          [login]: reduceUserInfo(prevState[login], action)
+        }
+      };
+    }
+    case USER_CACHE_LOGIN: {
+      const { login } = action;
+
+      return {
+        ...prevState,
+        logins: prevState.logins.concat(login)
       };
     }
     default:
