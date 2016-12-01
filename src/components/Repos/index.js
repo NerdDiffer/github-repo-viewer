@@ -99,7 +99,7 @@ const mapStateToProps = ({ current, repos, owners }) => {
     nameOfSelectedUser: login,
     isFetchingRepos: isFetching,
     repos: userRepos,
-    repoOwner: owners[login] || null,
+    repoOwner: owners.byName[login] || null,
     sortKey: key,
     sortDir: dir
   };
